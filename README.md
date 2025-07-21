@@ -25,6 +25,7 @@ To build a reliable data pipeline that processes electronic health record (EHR) 
 
 ## 📂 Project Structure
 
+```
 healthcare-readmission-pipeline/
 ├── data/ # Sample or test data (optional)
 ├── notebooks/ # Exploratory analysis (if any)
@@ -37,6 +38,8 @@ healthcare-readmission-pipeline/
 ├── bigquery/ # SQL queries, table DDLs
 ├── requirements.txt # Python dependencies
 └── README.md # This file
+
+```
 
 
 ---
