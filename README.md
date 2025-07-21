@@ -1,6 +1,6 @@
 # 🏥 Healthcare Readmission Risk Pipeline
 
-An industry-grade data engineering project using **PySpark** and **Google Cloud Platform (GCP)** to process real-world healthcare data and simulate readmission risk analytics. This project avoids ML training (no Vertex AI) and orchestration (no Composer), and focuses on scalable **ETL with PySpark**, **Cloud Storage**, and **BigQuery**.
+An industry-grade data engineering project using **PySpark** and **Google Cloud Platform (GCP)** to process real-world healthcare data and simulate readmission risk analytics. This project focuses on scalable **ETL with PySpark**, **Cloud Storage**, and **BigQuery**.
 
 ---
 
@@ -90,9 +90,9 @@ gs://<your-bucket-name>/raw_data/diabetes_readmission.csv
 
 ## 📌 Author
 
-**Your Name**  
-Data Engineer | PySpark & GCP Specialist  
-[GitHub](https://github.com/yourusername) • [LinkedIn](https://linkedin.com/in/yourprofile)
+**Ketan Jain**  
+Data Engineer
+[GitHub](https://github.com/ketan1105) • [LinkedIn](https://www.linkedin.com/in/ketan-jain-/)
 
 ---
 
