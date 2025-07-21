@@ -1,46 +1,51 @@
 # 🏥 Healthcare Readmission Risk Pipeline
 
-An industry-grade data engineering project using **PySpark** and **Google Cloud Platform (GCP)** to process real-world healthcare data and simulate readmission risk analytics. This project focuses on scalable **ETL with PySpark**, **Cloud Storage**, and **BigQuery**.
+An industry-grade data engineering project using **PySpark DataFrame API** and **Google Cloud Platform (GCP)** to process real-world healthcare data and simulate readmission risk analytics. This project focusing purely on scalable ETL using native PySpark.
 
 ---
 
 ## 📌 Project Objective
 
-To build a reliable data pipeline that processes electronic health record (EHR) data from hospitals to predict and analyze patient **readmission risk** based on demographic and clinical features.
+To build a reliable data pipeline that processes electronic health record (EHR) data from hospitals using **PySpark's DataFrame API** for transformations and logic, and stores the processed data in BigQuery for analysis.
 
 ---
 
 ## 🧰 Tech Stack
 
-| Layer            | Tool / Service                     |
-|------------------|-------------------------------------|
-| Language         | Python (PySpark)                    |
-| Cloud Platform   | Google Cloud Platform               |
-| Storage          | Cloud Storage (GCS)                 |
-| Data Processing  | PySpark (on Dataproc or locally)    |
-| Data Warehouse   | BigQuery                            |
-| Dashboard        | Looker Studio (or BigQuery SQLs)    |
+| Layer            | Tool / Service                          |
+|------------------|------------------------------------------|
+| Language         | Python (PySpark)                         |
+| Cloud Platform   | Google Cloud Platform (GCP)              |
+| Storage          | Cloud Storage (GCS)                      |
+| Data Processing  | PySpark DataFrame API (no Spark SQL)     |
+| Data Warehouse   | BigQuery                                 |
+| Dashboard        | Looker Studio (or BigQuery SQL)          |
 
 ---
 
 ## 📂 Project Structure
+
 
 ```
 healthcare-readmission-pipeline/
 ├── data/ # Sample or test data (optional)
 ├── notebooks/ # Exploratory analysis (if any)
 ├── src/
-│ ├── ingestion/ # PySpark scripts to read GCS data
-│ ├── transformation/ # PySpark scripts for data cleaning
-│ └── prediction/ # Logic for risk prediction
-├── configs/ # Schema files, GCP paths
-├── docs/ # Architecture diagrams, references
-├── bigquery/ # SQL queries, table DDLs
+│ ├── ingestion/
+│ │ └── ingest_gcs.py # Read from Cloud Storage
+│ ├── transformation/
+│ │ ├── clean.py # Data cleaning and casting
+│ │ └── feature_engineering.py # Add age groups, encounter flags, etc.
+│ ├── prediction/
+│ │ └── risk_scoring.py # Rule-based risk classification
+│ └── pipeline_runner.py # Executes full pipeline
+├── configs/ # GCP paths, schema definitions
+├── bigquery/ # BQ schema files or queries
+├── docs/ # Architecture diagrams
 ├── requirements.txt # Python dependencies
 └── README.md # This file
 
 ```
-
 
 ---
 
@@ -48,46 +53,66 @@ healthcare-readmission-pipeline/
 
 **Source:** [UCI Diabetes Readmission Dataset](https://archive.ics.uci.edu/ml/datasets/diabetes+130-us+hospitals+for+years+1999-2008)  
 - 100,000+ patient records  
-- Includes demographics, diagnoses, medications, readmission info  
-- Format: CSV
+- CSV format  
+- Includes demographics, diagnoses, hospital encounters, and readmission info
 
-Uploaded to:
+📁 Uploaded to:
 
-gs://<your-bucket-name>/raw_data/diabetes_readmission.csv
+
+gs://healthcare-readmission-pipeline-data/raw_data/diabetes_readmission.csv
+
+
+
+---
+
+## 🔄 Data Flow
+
+Cloud Storage (CSV) → PySpark DataFrame API (ETL) → BigQuery
 
 
 ---
 
-## 🔄 Data Flow Overview
+## 🔧 Core Transformation Example
 
-1. **Raw Data Ingestion**  
-   → From Cloud Storage to PySpark  
+```python
+from pyspark.sql.functions import when, col
 
-2. **Data Cleaning & Transformation**  
-   → Null handling, feature engineering, value standardization  
+df = df.withColumn(
+    "readmission_risk",
+    when(col("number_inpatient") > 2, "HIGH")
+    .when((col("number_emergency") > 1) & (col("age").like("70-80%")), "MEDIUM")
+    .otherwise("LOW")
+)
+```
 
-3. **Risk Logic Inference**  
-   → Rule-based logic (e.g. age + number of inpatient visits)  
+🧠 Key Steps in Pipeline
+1. Ingestion
+Load raw CSV from Cloud Storage into a Spark DataFrame
 
-4. **Data Sink**  
-   → Write final output to **BigQuery**  
+2. Cleaning
+Drop nulls, cast column types, and standardize formats
 
-5. **Analysis & Reporting**  
-   → Run SQL queries or build Looker dashboards
+3. Feature Engineering
+Create new fields like age groups, encounter counts, etc.
 
----
+4. Readmission Risk Logic
+Apply conditional rules using withColumn() and when()
+
+5. Output to BigQuery
+Write final DataFrame into a BigQuery table
 
 ## 🚧 Work in Progress
 
-| Phase | Description                             | Status     |
-|-------|-----------------------------------------|------------|
-| 1     | Setup GitHub repo and choose dataset    | ✅ Done     |
-| 2     | Upload data to GCS                      | ⏳ In Progress |
-| 3     | Write PySpark ingestion job             | ⏳ Next     |
-| 4     | Data cleaning and transformation        |            |
-| 5     | Add prediction logic                    |            |
-| 6     | Write to BigQuery                       |            |
-| 7     | Dashboarding with Looker Studio         |            |
+| Phase | Description                     | Status        |
+| ----- | ------------------------------- | ------------- |
+| 1     | Setup GitHub repo and structure | ✅ Done        |
+| 2     | Upload dataset to Cloud Storage | ⏳ In Progress |
+| 3     | PySpark ingestion and cleaning  | ⏳ Upcoming    |
+| 4     | Feature engineering             |               |
+| 5     | Readmission scoring             |               |
+| 6     | BigQuery output                 |               |
+| 7     | Dashboarding                    |               |
+
 
 ---
 
